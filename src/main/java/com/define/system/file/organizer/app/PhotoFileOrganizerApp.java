@@ -26,14 +26,5 @@ public class PhotoFileOrganizerApp implements IFileOrganizerApp {
 		userInputDTO.setFileExtension(Arrays.asList(propertiesLoader.getValue(FileOrganizerConstant.PHOTO_LIST_FILE_EXTENSION).split(",")));	
 		
 		return userInputDTO;
-	}
-	
-	
-	public static void main(String[] args) {
-		
-		System.out.println("20140527_225402.jpg".substring(1,"20140527_225402.jpg".lastIndexOf(".")));
-		
-		new PhotoFileOrganizerApp().init();
-	}
-	
+	}	
 }
