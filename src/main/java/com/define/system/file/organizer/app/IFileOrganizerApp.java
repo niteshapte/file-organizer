@@ -1,6 +1,6 @@
 package com.define.system.file.organizer.app;
 
 @FunctionalInterface
-public interface IFileFinder {
+public interface IFileOrganizerApp {
 	public void init();
 }

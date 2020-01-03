@@ -1,6 +1,6 @@
 package com.define.system.file.organizer.app;
 
-public class DocumentFinder implements IFileFinder {
+public class DocumentFileOrganizerApp implements IFileOrganizerApp {
 
 	@Override
 	public void init() {

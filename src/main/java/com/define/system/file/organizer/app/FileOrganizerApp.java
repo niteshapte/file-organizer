@@ -1,7 +1,7 @@
 package com.define.system.file.organizer.app;
 
 
-public class FileFinderApp {
+public class FileOrganizerApp {
 
 	public void start() {
 		

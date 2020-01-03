@@ -20,9 +20,9 @@ import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 
-public class PhotoFinderProcessor implements IFileFinderProcessor {
+public class PhotoOrganizer implements IFileOrganizer {
 	
-	final static Logger logger = Logger.getLogger(PhotoFinderProcessor.class);
+	final static Logger logger = Logger.getLogger(PhotoOrganizer.class);
 	
 	private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 

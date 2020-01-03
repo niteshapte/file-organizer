@@ -1,5 +1,5 @@
 package com.define.system.file.organizer.processor;
 
-public interface IFileFinderProcessor {
+public interface IFileOrganizer {
 
 }
