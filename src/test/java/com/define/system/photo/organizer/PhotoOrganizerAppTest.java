@@ -1,4 +1,4 @@
-package com.define.system.photo.finder;
+package com.define.system.photo.organizer;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -7,7 +7,7 @@ import junit.framework.TestSuite;
 /**
  * Unit test for simple App.
  */
-public class PhotoFinderAppTest extends TestCase {
+public class PhotoOrganizerAppTest extends TestCase {
 	
 	/**
 	 * Create the test case
@@ -15,7 +15,7 @@ public class PhotoFinderAppTest extends TestCase {
 	 * @param testName
 	 *            name of the test case
 	 */
-	public PhotoFinderAppTest(String testName) {
+	public PhotoOrganizerAppTest(String testName) {
 		super(testName);
 	}
 
@@ -23,7 +23,7 @@ public class PhotoFinderAppTest extends TestCase {
 	 * @return the suite of tests being tested
 	 */
 	public static Test suite() {
-		return new TestSuite(PhotoFinderAppTest.class);
+		return new TestSuite(PhotoOrganizerAppTest.class);
 	}
 
 	/**
