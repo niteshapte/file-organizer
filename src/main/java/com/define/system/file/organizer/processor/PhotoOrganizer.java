@@ -69,7 +69,7 @@ public class PhotoOrganizer implements IFileOrganizer {
 
 			imagePaths.forEach(imageFile -> process(imageFile, userInputDTO));
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Failed to process the file.");
 		}
 	}
 	
