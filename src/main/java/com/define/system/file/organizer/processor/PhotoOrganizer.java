@@ -9,6 +9,7 @@ import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -20,24 +21,64 @@ import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 
+/*
+ * Copyright 2020 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * The Class PhotoOrganizer.
+ * Organize photos / pictures by creation year, month and day
+ *
+ * @author Nitesh Apte
+ * @version 0.1
+ * @since 0.1
+ */
 public class PhotoOrganizer implements IFileOrganizer {
 	
+	/** The Constant logger. */
 	final static Logger logger = Logger.getLogger(PhotoOrganizer.class);
 	
+	/** The sdf. */
 	private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
+	/**
+	 * Initialize process.
+	 *
+	 * @param userInputDTO the user input DTO
+	 */
 	public void initializeProcess(UserInputDTO userInputDTO) {
 		try {
-			Files.walk(Paths.get(userInputDTO.getSourceLocation())).filter(Files::isRegularFile).filter(path -> 
-			userInputDTO.getFileExtension().contains(path.getFileName().getFileName().toString().substring(path.getFileName().getFileName().toString().lastIndexOf(".") + 1, path.getFileName().getFileName().toString().length()))).collect(Collectors.toList())
-			.forEach(imageFile -> {
-				process(imageFile, userInputDTO);
-			});
+			List<Path> imagePaths = Files.walk(Paths.get(userInputDTO.getSourceLocation())).filter(Files::isRegularFile).filter(path -> 
+			userInputDTO.getFileExtension().contains(path.getFileName().getFileName().toString().substring(path.getFileName().getFileName().toString().lastIndexOf(".") + 1, path.getFileName().getFileName().toString().length()))).collect(Collectors.toList());
+			
+			logger.info("Source Location: " + userInputDTO.getSourceLocation());
+			logger.info("Total photos found: " + imagePaths.size());
+			logger.info("Processing files one by one now.");
+
+			imagePaths.forEach(imageFile -> process(imageFile, userInputDTO));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * Process single file
+	 *
+	 * @param imageFile the image file
+	 * @param userInputDTO the user input DTO
+	 */
 	private void process(Path imageFile, UserInputDTO userInputDTO) {
 		logger.info("Inside PhotoFinderProcessor.process");
 		
@@ -67,9 +108,9 @@ public class PhotoOrganizer implements IFileOrganizer {
 		logger.info("Formatted Year - Month - Day : " + year + " - " + formattedMonth + " - " + day);
 		
 		if(userInputDTO.getCreateFolder()) {
-			logger.info("Relocation of new location is enabled.");
+			logger.info("Relocation to new location is enabled.");
 			
-			String destinationFilePath = userInputDTO.getDestinationLocation() + year + "/" + formattedMonth + "/" + day + " " + formattedMonth + " " + year;
+			String destinationFilePath = userInputDTO.getDestinationLocation() + "/" + year + "/" + formattedMonth + "/" + day + " " + formattedMonth + " " + year;
 			
 			createDestinationFolderStructure(destinationFilePath);
 			
@@ -79,15 +120,26 @@ public class PhotoOrganizer implements IFileOrganizer {
 		logger.info("Leaving PhotoFinderProcessor.process");
 	}
 	
+	/**
+	 * Move file to destination.
+	 *
+	 * @param originalPath the original path
+	 * @param destinationPath the destination path
+	 */
 	private void moveFileToDestination(Path originalPath, Path destinationPath) {
 		try {
 			Files.move(originalPath, destinationPath, StandardCopyOption.ATOMIC_MOVE);
-			logger.info("File " + originalPath.toString() + " moved.");
+			logger.info("File " + originalPath.toString() + " moved to " + destinationPath.toString());
 		} catch (Exception e) {
 			logger.error("Failed to move file " + originalPath.toString() + " to destination");
 		}
 	}
 	
+	/**
+	 * Creates the destination folder structure.
+	 *
+	 * @param destinationFilePath the destination file path
+	 */
 	private void createDestinationFolderStructure(String destinationFilePath) {
 		Path dirPathObj = Paths.get(destinationFilePath);
 		boolean dirExists = Files.exists(dirPathObj);
@@ -101,6 +153,12 @@ public class PhotoOrganizer implements IFileOrganizer {
         }
 	}
 	
+	/**
+	 * Format month.
+	 *
+	 * @param month the month
+	 * @return the string
+	 */
 	private String formatMonth(String month) {
 		String formattedMonth = "00";
 	    SimpleDateFormat monthParse = new SimpleDateFormat("MM");
@@ -113,6 +171,13 @@ public class PhotoOrganizer implements IFileOrganizer {
 	    return formattedMonth;
 	}
 
+	/**
+	 * Gets the date from img EXIF.
+	 *
+	 * @param file the file
+	 * @return the date from img EXIF
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private String getDateFromImgEXIF(final File file) throws IOException {
 		String date = null;
 		if (file.isFile()) {
