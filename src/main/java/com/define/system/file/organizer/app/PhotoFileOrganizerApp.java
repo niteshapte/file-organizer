@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 
 import com.define.system.file.organizer.constants.FileOrganizerConstant;
 import com.define.system.file.organizer.dto.UserInputDTO;
+import com.define.system.file.organizer.processor.FileOrganizerContext;
 import com.define.system.file.organizer.processor.PhotoOrganizer;
 import com.define.system.file.organizer.util.PropertiesLoader;
 
@@ -45,7 +46,7 @@ public class PhotoFileOrganizerApp implements IFileOrganizerApp {
 		UserInputDTO userInputDTO = collectInput();
 		if(null != userInputDTO) {
 			logger.info("Photo organizer is enabled. Initializing process...");
-			new PhotoOrganizer().initializeProcess(userInputDTO);
+			new FileOrganizerContext(new PhotoOrganizer()).start(userInputDTO);
 		} else {
 			logger.info("Photo organizer is not enabled.");
 		}
