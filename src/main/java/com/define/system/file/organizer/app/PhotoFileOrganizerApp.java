@@ -56,7 +56,7 @@ public class PhotoFileOrganizerApp implements IFileOrganizerApp {
 	 * Collect input from properties file.
 	 *
 	 * @return the user input DTO
-	 */
+	 */ 
 	private UserInputDTO collectInput() {
 		PropertiesLoader propertiesLoader = PropertiesLoader.getInstance();
 		propertiesLoader.loadFile(FileOrganizerConstant.INPUT_PROP_FILE_PATH);

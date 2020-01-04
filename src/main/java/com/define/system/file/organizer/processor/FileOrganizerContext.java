@@ -36,7 +36,7 @@ public class FileOrganizerContext {
 	 * @param iFileOrganizer the i file organizer
 	 */
 	public FileOrganizerContext(IFileOrganizer iFileOrganizer) {
-		this.iFileOrganizer = iFileOrganizer;
+		this.iFileOrganizer = iFileOrganizer; 
 	}
 	
 	/**
