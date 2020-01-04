@@ -50,7 +50,7 @@ public class PhotoFileOrganizerApp implements IFileOrganizerApp {
 		} else {
 			logger.info("Photo organizer is not enabled.");
 		}
-	}
+	} 
 	
 	/**
 	 * Collect input from properties file.
