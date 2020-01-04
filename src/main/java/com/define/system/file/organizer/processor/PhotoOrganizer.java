@@ -38,7 +38,7 @@ import com.drew.metadata.exif.ExifSubIFDDirectory;
  */
 
 /**
- * The Class PhotoOrganizer.
+ * The Class PhotoOrganizer - Photo strategy class
  * Organize photos / pictures by creation year, month and day
  *
  * @author Nitesh Apte
@@ -80,7 +80,7 @@ public class PhotoOrganizer implements IFileOrganizer {
 	 * @param userInputDTO the user input DTO
 	 */
 	private void process(Path imageFile, UserInputDTO userInputDTO) {
-		logger.info("Inside PhotoFinderProcessor.process");
+		logger.info("Inside PhotoOrganizer.process");
 		
 		String filePath = imageFile.toString();
 		
@@ -117,7 +117,7 @@ public class PhotoOrganizer implements IFileOrganizer {
 			moveFileToDestination(imageFile, Paths.get(destinationFilePath + "/" + fileName));
 		}
 		logger.info("Finished processing file = " + filePath);
-		logger.info("Leaving PhotoFinderProcessor.process");
+		logger.info("Leaving PhotoOrganizer.process");
 	}
 	
 	/**
