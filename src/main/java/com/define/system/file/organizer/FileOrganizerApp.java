@@ -28,7 +28,7 @@ import com.define.system.file.organizer.app.VideoFileOrganizerApp;
  * @version 0.1
  * @since 0.1
  */
-public class FileFinderApp {
+public class FileOrganizerApp {
 	
 	/**
 	 * The main method. Calls are strategy based 
