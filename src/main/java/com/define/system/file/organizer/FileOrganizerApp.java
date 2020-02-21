@@ -13,6 +13,7 @@ import com.define.system.file.organizer.app.VideoFileOrganizerApp;
 
 import lombok.extern.slf4j.Slf4j;
 
+// TODO: Auto-generated Javadoc
 /*
  * Copyright 2020 the original author or authors.
  *
@@ -30,24 +31,29 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 /**
- * The Main class to call all the apps
- * 
+ * The Main class to call all the apps.
+ *
  * @author Nitesh Apte
  * @version 0.1
  * @since 0.1
  */
+
+/** The Constant log. */
 @Slf4j
 @SpringBootApplication
 @ComponentScan("com.define.system.file.organizer*")
 @PropertySource("file:./inputprop/file-organizer.properties")
 public class FileOrganizerApp implements CommandLineRunner {
 	
+	/** The photo file organizer app. */
 	@Autowired
 	PhotoFileOrganizerApp photoFileOrganizerApp;
 	
+	/** The video file organizer app. */
 	@Autowired
 	VideoFileOrganizerApp videoFileOrganizerApp;
 	
+	/** The document file organizer app. */
 	@Autowired
 	DocumentFileOrganizerApp documentFileOrganizerApp;
 	
@@ -61,6 +67,9 @@ public class FileOrganizerApp implements CommandLineRunner {
 		SpringApplication.run(FileOrganizerApp.class, args);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.springframework.boot.CommandLineRunner#run(java.lang.String[])
+	 */
 	@Override
 	public void run(String... args) throws Exception {
 		

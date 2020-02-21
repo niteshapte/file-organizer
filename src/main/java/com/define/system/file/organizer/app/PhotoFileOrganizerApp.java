@@ -51,7 +51,7 @@ public class PhotoFileOrganizerApp implements IFileOrganizerApp {
 			new FileOrganizerContext(new PhotoOrganizer()).start(userInputDTO);
 		} else {
 			log.info("Photo organizer is not enabled.");
-		}
+		} 
 	} 
 	
 	/**

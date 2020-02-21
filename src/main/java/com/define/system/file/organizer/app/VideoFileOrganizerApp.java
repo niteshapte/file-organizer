@@ -47,7 +47,7 @@ public class VideoFileOrganizerApp implements IFileOrganizerApp {
 			new FileOrganizerContext(new VideoOrganizer()).start(userInputDTO);
 		} else {
 			log.info("Photo organizer is not enabled.");
-		}
+		} 
 	} 
 	
 	/**

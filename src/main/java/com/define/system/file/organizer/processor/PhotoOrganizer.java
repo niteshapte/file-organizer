@@ -72,7 +72,7 @@ public class PhotoOrganizer implements IFileOrganizer {
 		} catch (IOException e) {
 			log.error("Failed to process the file.");
 		}
-	}
+	} 
 	
 	/**
 	 * Process single file

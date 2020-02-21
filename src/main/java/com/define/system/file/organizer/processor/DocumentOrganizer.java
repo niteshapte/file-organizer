@@ -61,7 +61,7 @@ public class DocumentOrganizer implements IFileOrganizer {
 			imagePaths.forEach(imageFile -> process(imageFile, userInputDTO));
 		} catch (IOException e) {
 			log.error("Failed to process the file.");
-		}
+		} 
 	}
 	
 	/**
