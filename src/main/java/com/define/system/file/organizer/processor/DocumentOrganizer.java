@@ -11,9 +11,12 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import com.define.system.file.organizer.dto.UserInputDTO;
+
+import lombok.extern.slf4j.Slf4j;
+
 
 /*
  * Copyright 2020 the original author or authors.
@@ -39,10 +42,9 @@ import com.define.system.file.organizer.dto.UserInputDTO;
  * @version 0.1
  * @since 0.1
  */
+@Slf4j
+@Component
 public class DocumentOrganizer implements IFileOrganizer {
-
-	/** The Constant logger. */
-	final static Logger logger = Logger.getLogger(DocumentOrganizer.class);
 	
 	/** The sdf. */
 	private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -52,13 +54,13 @@ public class DocumentOrganizer implements IFileOrganizer {
 			List<Path> imagePaths = Files.walk(Paths.get(userInputDTO.getSourceLocation())).filter(Files::isRegularFile).filter(path -> 
 			userInputDTO.getFileExtension().contains(path.getFileName().getFileName().toString().substring(path.getFileName().getFileName().toString().lastIndexOf(".") + 1, path.getFileName().getFileName().toString().length()))).collect(Collectors.toList());
 			
-			logger.info("Source Location: " + userInputDTO.getSourceLocation());
-			logger.info("Total photos found: " + imagePaths.size());
-			logger.info("Processing files one by one now.");
+			log.info("Source Location: " + userInputDTO.getSourceLocation());
+			log.info("Total photos found: " + imagePaths.size());
+			log.info("Processing files one by one now.");
 
 			imagePaths.forEach(imageFile -> process(imageFile, userInputDTO));
 		} catch (IOException e) {
-			logger.error("Failed to process the file.");
+			log.error("Failed to process the file.");
 		}
 	}
 	
@@ -69,11 +71,11 @@ public class DocumentOrganizer implements IFileOrganizer {
 	 * @param userInputDTO the user input DTO
 	 */
 	private void process(Path imageFile, UserInputDTO userInputDTO) {
-		logger.info("Inside DocumentOrganizer.process");
+		log.info("Inside DocumentOrganizer.process");
 		
 		String filePath = imageFile.toString();
 		
-		logger.info("Processing file = " + filePath);
+		log.info("Processing file = " + filePath);
 		
 		String fileName = imageFile.getFileName().toString();
 		String dateTime = "00000000";
@@ -82,22 +84,22 @@ public class DocumentOrganizer implements IFileOrganizer {
 		String day = "00";
 		try {
 			dateTime = getLastModifiedDateOfFile(imageFile);
-			logger.info("Date Time detected for file " + filePath + " = " + dateTime);
+			log.info("Date Time detected for file " + filePath + " = " + dateTime);
 		} catch (IOException e) {
-			logger.error("Failed to read date time of image " + fileName + ". Error: " + e.getMessage());
+			log.error("Failed to read date time of image " + fileName + ". Error: " + e.getMessage());
 		}
 		year = dateTime != null ? dateTime.substring(0, 4) : "0000";
 		month = dateTime != null ? dateTime.substring(5, 7) : "00";
 		day = dateTime != null ? dateTime.substring(8, 10) : "00";
 		
-		logger.info("Original Year - Month - Day : " + year + " - " + month + " - " + day + " for file " + filePath);
+		log.info("Original Year - Month - Day : " + year + " - " + month + " - " + day + " for file " + filePath);
 		
 		String formattedMonth = formatMonth(month);
 
-		logger.info("Formatted Year - Month - Day : " + year + " - " + formattedMonth + " - " + day);
+		log.info("Formatted Year - Month - Day : " + year + " - " + formattedMonth + " - " + day);
 		
 		if(userInputDTO.getCreateFolder()) {
-			logger.info("Relocation to new location is enabled.");
+			log.info("Relocation to new location is enabled.");
 			
 			String destinationFilePath = userInputDTO.getDestinationLocation() + "/" + year + "/" + formattedMonth + "/" + day + " " + formattedMonth + " " + year;
 			
@@ -105,8 +107,8 @@ public class DocumentOrganizer implements IFileOrganizer {
 			
 			moveFileToDestination(imageFile, Paths.get(destinationFilePath + "/" + fileName));
 		}
-		logger.info("Finished processing file = " + filePath);
-		logger.info("Leaving DocumentOrganizer.process");
+		log.info("Finished processing file = " + filePath);
+		log.info("Leaving DocumentOrganizer.process");
 	}
 	
 	/**
@@ -118,9 +120,9 @@ public class DocumentOrganizer implements IFileOrganizer {
 	private void moveFileToDestination(Path originalPath, Path destinationPath) {
 		try {
 			Files.move(originalPath, destinationPath, StandardCopyOption.ATOMIC_MOVE);
-			logger.info("File " + originalPath.toString() + " moved to " + destinationPath.toString());
+			log.info("File " + originalPath.toString() + " moved to " + destinationPath.toString());
 		} catch (Exception e) {
-			logger.error("Failed to move file " + originalPath.toString() + " to destination");
+			log.error("Failed to move file " + originalPath.toString() + " to destination");
 		}
 	}
 	
@@ -135,9 +137,9 @@ public class DocumentOrganizer implements IFileOrganizer {
         if(!dirExists) {
         	try {
                 Files.createDirectories(dirPathObj);
-                logger.info("Created nested folders = " + destinationFilePath);
+                log.info("Created nested folders = " + destinationFilePath);
             } catch (IOException ioExceptionObj) {
-            	logger.error("Problem occured while creating the directory structure = " + ioExceptionObj.getMessage());
+            	log.error("Problem occured while creating the directory structure = " + ioExceptionObj.getMessage());
             }
         }
 	}
@@ -155,7 +157,7 @@ public class DocumentOrganizer implements IFileOrganizer {
 	    try {
 	    	formattedMonth = monthDisplay.format(monthParse.parse(month));
 		} catch (ParseException e) {
-			logger.error("Failed to convert Integer form of month to String. Error: " + e.getMessage());
+			log.error("Failed to convert Integer form of month to String. Error: " + e.getMessage());
 		}
 	    return formattedMonth;
 	}

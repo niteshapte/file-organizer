@@ -1,9 +1,17 @@
 package com.define.system.file.organizer;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.PropertySource;
+
 import com.define.system.file.organizer.app.DocumentFileOrganizerApp;
-import com.define.system.file.organizer.app.FileOrganizerAppContext;
 import com.define.system.file.organizer.app.PhotoFileOrganizerApp;
 import com.define.system.file.organizer.app.VideoFileOrganizerApp;
+
+import lombok.extern.slf4j.Slf4j;
 
 /*
  * Copyright 2020 the original author or authors.
@@ -28,22 +36,41 @@ import com.define.system.file.organizer.app.VideoFileOrganizerApp;
  * @version 0.1
  * @since 0.1
  */
-public class FileOrganizerApp {
+@Slf4j
+@SpringBootApplication
+@ComponentScan("com.define.system.file.organizer*")
+@PropertySource("file:./inputprop/file-organizer.properties")
+public class FileOrganizerApp implements CommandLineRunner {
+	
+	@Autowired
+	PhotoFileOrganizerApp photoFileOrganizerApp;
+	
+	@Autowired
+	VideoFileOrganizerApp videoFileOrganizerApp;
+	
+	@Autowired
+	DocumentFileOrganizerApp documentFileOrganizerApp;
 	
 	/**
-	 * The main method. Calls are strategy based 
+	 * The main method. Calls are strategy based
 	 *
 	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
+		log.info("File Organizer App Initiated.");
+		SpringApplication.run(FileOrganizerApp.class, args);
+	}
+	
+	@Override
+	public void run(String... args) throws Exception {
 		
 		// Photo
-		new FileOrganizerAppContext(new PhotoFileOrganizerApp()).startOrganizerApp();
+		photoFileOrganizerApp.init();
 		
 		// Video
-		new FileOrganizerAppContext(new VideoFileOrganizerApp()).startOrganizerApp();
+		videoFileOrganizerApp.init();
 		
 		// Document
-		new FileOrganizerAppContext(new DocumentFileOrganizerApp()).startOrganizerApp();
+		documentFileOrganizerApp.init();
 	}
 }

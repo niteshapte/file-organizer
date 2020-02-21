@@ -2,13 +2,15 @@ package com.define.system.file.organizer.app;
 
 import java.util.Arrays;
 
-import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import com.define.system.file.organizer.constants.FileOrganizerConstant;
 import com.define.system.file.organizer.dto.UserInputDTO;
 import com.define.system.file.organizer.processor.FileOrganizerContext;
 import com.define.system.file.organizer.processor.VideoOrganizer;
 import com.define.system.file.organizer.util.PropertiesLoader;
+
+import lombok.extern.slf4j.Slf4j;
 
 /*
  * Copyright 2020 the original author or authors.
@@ -33,10 +35,9 @@ import com.define.system.file.organizer.util.PropertiesLoader;
  * @version 0.1
  * @since 0.1
  */
+@Slf4j
+@Component
 public class DocumentFileOrganizerApp implements IFileOrganizerApp {
-
-	/** The Constant logger. */
-	final static Logger logger = Logger.getLogger(VideoFileOrganizerApp.class);
 	
 	/* (non-Javadoc)
 	 * @see com.define.system.file.organizer.app.IFileOrganizerApp#init()
@@ -45,10 +46,10 @@ public class DocumentFileOrganizerApp implements IFileOrganizerApp {
 	public void init() {
 		UserInputDTO userInputDTO = collectInput();
 		if(null != userInputDTO) {
-			logger.info("Photo organizer is enabled. Initializing process...");
+			log.info("Photo organizer is enabled. Initializing process...");
 			new FileOrganizerContext(new VideoOrganizer()).start(userInputDTO);
 		} else {
-			logger.info("Photo organizer is not enabled.");
+			log.info("Photo organizer is not enabled.");
 		}
 	} 
 	
@@ -58,13 +59,14 @@ public class DocumentFileOrganizerApp implements IFileOrganizerApp {
 	 * @return the user input DTO
 	 */ 
 	private UserInputDTO collectInput() {
+	
 		PropertiesLoader propertiesLoader = PropertiesLoader.getInstance();
 		propertiesLoader.loadFile(FileOrganizerConstant.INPUT_PROP_FILE_PATH);
 		
 		UserInputDTO userInputDTO = null;
 		
 		if(Boolean.parseBoolean(propertiesLoader.getValue(FileOrganizerConstant.DOC_ORGANIZER_ENABLED))) {
-			logger.info("Collecting input for video organizer");
+			log.info("Collecting input for video organizer");
 			
 			userInputDTO = new UserInputDTO();
 			userInputDTO.setSourceLocation(propertiesLoader.getValue(FileOrganizerConstant.DOC_STRING_SOURCE_LOCATION));
@@ -72,11 +74,11 @@ public class DocumentFileOrganizerApp implements IFileOrganizerApp {
 			userInputDTO.setCreateFolder(Boolean.parseBoolean(propertiesLoader.getValue(FileOrganizerConstant.DOC_BOOLEAN_CREATE_FOLDER)));
 			userInputDTO.setFileExtension(Arrays.asList(propertiesLoader.getValue(FileOrganizerConstant.DOC_LIST_FILE_EXTENSION).split(",")));
 			
-			logger.info("Collected inputs:");
-			logger.info("Source Location: " + userInputDTO.getSourceLocation());
-			logger.info("Destination Location: " + userInputDTO.getDestinationLocation());
-			logger.info("Folder creation / File Relocation allowed: " + userInputDTO.getCreateFolder());
-			logger.info("Allowed file extensions: " + userInputDTO.getFileExtension());
+			log.info("Collected inputs:");
+			log.info("Source Location: " + userInputDTO.getSourceLocation());
+			log.info("Destination Location: " + userInputDTO.getDestinationLocation());
+			log.info("Folder creation / File Relocation allowed: " + userInputDTO.getCreateFolder());
+			log.info("Allowed file extensions: " + userInputDTO.getFileExtension());
 		}
 		return userInputDTO;
 	}
