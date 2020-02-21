@@ -127,12 +127,13 @@ public class PhotoOrganizer implements IFileOrganizer {
 	 * @param originalPath the original path
 	 * @param destinationPath the destination path
 	 */
-	private void moveFileToDestination(Path originalPath, Path destinationPath) {
+	private synchronized void moveFileToDestination(Path originalPath, Path destinationPath) {
 		try {
 			Files.move(originalPath, destinationPath, StandardCopyOption.ATOMIC_MOVE);
 			log.info("File " + originalPath.toString() + " moved to " + destinationPath.toString());
 		} catch (Exception e) {
-			log.error("Failed to move file " + originalPath.toString() + " to destination");
+			e.printStackTrace();
+			log.error("Failed to move file " + originalPath.toString() + " to destination", e.getMessage());
 		}
 	}
 	

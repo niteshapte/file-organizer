@@ -2,13 +2,14 @@ package com.define.system.file.organizer.app;
 
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.define.system.file.organizer.constants.FileOrganizerConstant;
 import com.define.system.file.organizer.dto.UserInputDTO;
 import com.define.system.file.organizer.processor.FileOrganizerContext;
 import com.define.system.file.organizer.processor.VideoOrganizer;
-import com.define.system.file.organizer.util.PropertiesLoader;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,6 +40,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class VideoFileOrganizerApp implements IFileOrganizerApp {
 	
+	@Autowired
+	Environment env;
+	
 	@Override
 	public void init() {
 		UserInputDTO userInputDTO = collectInput();
@@ -56,19 +60,16 @@ public class VideoFileOrganizerApp implements IFileOrganizerApp {
 	 * @return the user input DTO
 	 */ 
 	private UserInputDTO collectInput() {
-		PropertiesLoader propertiesLoader = PropertiesLoader.getInstance();
-		propertiesLoader.loadFile(FileOrganizerConstant.INPUT_PROP_FILE_PATH);
-		
 		UserInputDTO userInputDTO = null;
 		
-		if(Boolean.parseBoolean(propertiesLoader.getValue(FileOrganizerConstant.VIDEO_ORGANIZER_ENABLED))) {
+		if(Boolean.parseBoolean(env.getProperty(FileOrganizerConstant.VIDEO_ORGANIZER_ENABLED))) {
 			log.info("Collecting input for video organizer");
 			
 			userInputDTO = new UserInputDTO();
-			userInputDTO.setSourceLocation(propertiesLoader.getValue(FileOrganizerConstant.VIDEO_STRING_SOURCE_LOCATION));
-			userInputDTO.setDestinationLocation(propertiesLoader.getValue(FileOrganizerConstant.VIDEO_STRING_DESTINATION_LOCATION));
-			userInputDTO.setCreateFolder(Boolean.parseBoolean(propertiesLoader.getValue(FileOrganizerConstant.VIDEO_BOOLEAN_CREATE_FOLDER)));
-			userInputDTO.setFileExtension(Arrays.asList(propertiesLoader.getValue(FileOrganizerConstant.VIDEO_LIST_FILE_EXTENSION).split(",")));
+			userInputDTO.setSourceLocation(env.getProperty(FileOrganizerConstant.VIDEO_STRING_SOURCE_LOCATION));
+			userInputDTO.setDestinationLocation(env.getProperty(FileOrganizerConstant.VIDEO_STRING_DESTINATION_LOCATION));
+			userInputDTO.setCreateFolder(Boolean.parseBoolean(env.getProperty(FileOrganizerConstant.VIDEO_BOOLEAN_CREATE_FOLDER)));
+			userInputDTO.setFileExtension(Arrays.asList(env.getProperty(FileOrganizerConstant.VIDEO_LIST_FILE_EXTENSION).split(",")));
 			
 			log.info("Collected inputs:");
 			log.info("Source Location: " + userInputDTO.getSourceLocation());

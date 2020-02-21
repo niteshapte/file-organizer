@@ -2,13 +2,13 @@ package com.define.system.file.organizer.app;
 
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.define.system.file.organizer.constants.FileOrganizerConstant;
 import com.define.system.file.organizer.dto.UserInputDTO;
-import com.define.system.file.organizer.processor.FileOrganizerContext;
 import com.define.system.file.organizer.processor.PhotoOrganizer;
-import com.define.system.file.organizer.util.PropertiesLoader;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,6 +40,12 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class PhotoFileOrganizerApp implements IFileOrganizerApp {
 	
+	@Autowired
+	Environment env;
+	
+	@Autowired
+	PhotoOrganizer photoOrganizer;
+	
 	/* (non-Javadoc)
 	 * @see com.define.system.file.organizer.app.IFileOrganizerApp#init()
 	 */
@@ -48,7 +54,7 @@ public class PhotoFileOrganizerApp implements IFileOrganizerApp {
 		UserInputDTO userInputDTO = collectInput();
 		if(null != userInputDTO) {
 			log.info("Photo organizer is enabled. Initializing process...");
-			new FileOrganizerContext(new PhotoOrganizer()).start(userInputDTO);
+			photoOrganizer.initializeProcess(userInputDTO);
 		} else {
 			log.info("Photo organizer is not enabled.");
 		} 
@@ -60,19 +66,16 @@ public class PhotoFileOrganizerApp implements IFileOrganizerApp {
 	 * @return the user input DTO
 	 */ 
 	private UserInputDTO collectInput() {
-		PropertiesLoader propertiesLoader = PropertiesLoader.getInstance();
-		propertiesLoader.loadFile(FileOrganizerConstant.INPUT_PROP_FILE_PATH);
-		
 		UserInputDTO userInputDTO = null;
 		
-		if(Boolean.parseBoolean(propertiesLoader.getValue(FileOrganizerConstant.PHOTO_ORGANIZER_ENABLED))) {
+		if(Boolean.parseBoolean(env.getProperty(FileOrganizerConstant.PHOTO_ORGANIZER_ENABLED))) {
 			log.info("Collecting input for photo organizer");
 			
 			userInputDTO = new UserInputDTO();
-			userInputDTO.setSourceLocation(propertiesLoader.getValue(FileOrganizerConstant.PHOTO_STRING_SOURCE_LOCATION));
-			userInputDTO.setDestinationLocation(propertiesLoader.getValue(FileOrganizerConstant.PHOTO_STRING_DESTINATION_LOCATION));
-			userInputDTO.setCreateFolder(Boolean.parseBoolean(propertiesLoader.getValue(FileOrganizerConstant.PHOTO_BOOLEAN_CREATE_FOLDER)));
-			userInputDTO.setFileExtension(Arrays.asList(propertiesLoader.getValue(FileOrganizerConstant.PHOTO_LIST_FILE_EXTENSION).split(",")));
+			userInputDTO.setSourceLocation(env.getProperty(FileOrganizerConstant.PHOTO_STRING_SOURCE_LOCATION));
+			userInputDTO.setDestinationLocation(env.getProperty(FileOrganizerConstant.PHOTO_STRING_DESTINATION_LOCATION));
+			userInputDTO.setCreateFolder(Boolean.parseBoolean(env.getProperty(FileOrganizerConstant.PHOTO_BOOLEAN_CREATE_FOLDER)));
+			userInputDTO.setFileExtension(Arrays.asList(env.getProperty(FileOrganizerConstant.PHOTO_LIST_FILE_EXTENSION).split(",")));
 
 			log.info("Collected inputs:");
 			log.info("Source Location: " + userInputDTO.getSourceLocation());
